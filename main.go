@@ -55,9 +55,9 @@ const (
 )
 
 type options struct {
-	Count     int  `short:"c" long:"count" default:"20" description:"Stop after <count> replies"`
-	Privilege bool `short:"P" long:"privilege" description:"Enable privileged mode"`
-	Version   bool `short:"V" long:"version" description:"Show version"`
+	Count     int  `short:"c" long:"count"     default:"20" description:"Stop after <count> replies"`
+	Privilege bool `short:"P" long:"privilege"              description:"Enable privileged mode"`
+	Version   bool `short:"V" long:"version"                description:"Show version"`
 }
 
 func main() {
@@ -110,11 +110,17 @@ func run(cliArgs []string) (exitCode, error) {
 
 	pinger, err := initPinger(args[0], opts)
 	if err != nil {
-		return exitCodeOK, fmt.Errorf("an error occurred while initializing pinger: %w", err)
+		return exitCodeOK, fmt.Errorf(
+			"an error occurred while initializing pinger: %w",
+			err,
+		)
 	}
 
 	if err := pinger.Run(); err != nil {
-		return exitCodeErrPing, fmt.Errorf("an error occurred when running ping: %w", err)
+		return exitCodeErrPing, fmt.Errorf(
+			"an error occurred when running ping: %w",
+			err,
+		)
 	}
 
 	return exitCodeOK, nil
@@ -131,7 +137,6 @@ func initPinger(host string, opts options) (*probing.Pinger, error) {
 	// Listen for Ctrl-C.
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt)
-
 	go func() {
 		<-c
 		pinger.Stop()
